@@ -38,10 +38,6 @@ export const errorHandler = (
                 errorResponse.status = 400;
                 errorResponse.message = error.message;
                 break;
-            case MembershipErrorCode.FILE_OPERATION_FAILED:
-                errorResponse.status = 500;
-                errorResponse.message = 'Internal Server Error';
-                break;
             default:
                 errorResponse.status = 500;
                 errorResponse.message = 'Internal Server Error';
