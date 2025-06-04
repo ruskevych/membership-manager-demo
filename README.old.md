@@ -7,7 +7,6 @@ This project is a backend system for managing memberships and membership periods
 ### Prerequisites
 - Node.js (v18 or higher recommended)
 - npm (v9 or higher recommended)
-- Docker & Docker Compose (for running the PostgreSQL database)
 
 ### Installation
 
@@ -15,26 +14,6 @@ Install all dependencies:
 ```sh
 npm install
 ```
-
-### Running the Database with Docker Compose
-
-A PostgreSQL database is provided via Docker Compose. You can start it with:
-
-```sh
-docker-compose up -d
-```
-
-> **Note:** Ensure you have the following environment variables set (either in your shell or in a `.env` file):
-> - `POSTGRES_USER`
-> - `POSTGRES_PASSWORD`
-> - `POSTGRES_DB`
-> - `DB_PORT` (optional, defaults to 5432)
-
-For running tests with a separate database, use:
-```sh
-docker-compose -f docker-compose.test.yml up -d
-```
-This will start a PostgreSQL 14 instance on port 5433 with default credentials for testing.
 
 ### Running the Project
 
