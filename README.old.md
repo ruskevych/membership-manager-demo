@@ -1,54 +1,120 @@
-# Membership Management System
+# Fullstack Interview Challenge
 
-## Getting Started
+> [!IMPORTANT]
+> You should have received a google doc together with this repository that explains in detail the scope and context of the exercise, together with it's acceptance criteria and any other necessary information for the completion of the challenge.
 
-This project is a backend system for managing memberships and membership periods, built with Express.js and TypeScript.
+## Context
 
-### Prerequisites
-- Node.js (v18 or higher recommended)
-- npm (v9 or higher recommended)
+You are working in the product team at eversports that is maintaining the eversports manager. You and your team are working on a bunch of features around memberships within the current quarter.
+
+The team also started an initiative in this quarter to modernize the codebase by refactoring features implemented in an old technology stack to a more modern one.  
+
+### Domain: Memberships
+
+A `Membership` allows a user to participate at any class the a specific sport venue within a specific timespan. Within this timespan, the membership is divided into `MembershipPeriods`. The MembershipPeriods represent billing periods that the user has to pay for.
+
+For the scope of this exercise, the domain model was reduced to a reasonable size. 
+
+#### Entity: Membership
+```ts
+interface Membership {
+    name: string // name of the membership
+    user: number // the user that the membership is assigned to
+    recurringPrice: number // price the user has to pay for every period
+    validFrom: Date // start of the validity
+    validUntil: Date // end of the validity
+    state: string // indicates the state of the membership
+    paymentMethod: string // which payment method will be used to pay for the periods
+    billingInterval: string // the interval unit of the periods
+    billingPeriods: number // the number of periods the membership has
+}
+```
+
+#### Entity: MembershipPeriod
+```ts
+interface MembershipPeriod {
+    membership: number // membership the period is attached to
+    start: Date // indicates the start of the period
+    end: Date // indicates the end of the period
+    state: string
+}
+```
+
+
+## Task 1 - Modernization of the membership codebase (backend only)
+
+Before your team can start to implement new features, you guys decided to **modernize the backend codebase** first.
+
+Your task is to **refactor two endpoints** implemented in the **legacy codebase** that can be used to list and create memberships:
+
+GET /legacy/memberships (`src/legacy/routes/membership.routes.js`)
+POST /legacy/memberships (`src/legacy/routes/membership.routes.js`)
+
+Your new implementation should be accessible through new endpoints in the **modern codebase** that are already prepared:
+
+GET /memberships (`src/modern/routes/membership.routes.ts`)
+POST /memberships (`src/modern/routes/membership.routes.ts`)
+
+When refactoring, you should consider the following aspects:
+
+- The response from the endpoints should be exactly the same. Use the same error messages that are used in the legacy implementation.
+- You write read- and maintainable code
+- You use Typescript instead of Javascript to enabled type safety
+- Your code is separated based on concerns
+- Your code is covered by automated tests to ensure the stability of the application
+
+> [!NOTE]
+> For the scope of this task, the data used is mocked within the json files `membership.json` and `membership-periods.json`
+
+> [!NOTE]
+> We provided you with an clean express.js server to run the example. For your implementations, feel free to use any library out there to help you with your solution. If you decide to choose another JavaScript/TypeScript http library/framework (eg. NestJs) update the run config described below if needed, and ensure that the routes of the described actions don't change.
+
+
+## Task 2 - Design an architecture to provide a membership export (conception only)
+
+The team discovered that users are interested in **exporting all of their memberships** from the system to run their own analysis once a month as a **CSV file**. Because the creation of the export file would take some seconds, the team decided to go for an **asynchronous process** for creating the file and sending it via email. The process will be triggered by an API call of the user. 
+
+Your task is to **map out a diagram** that visualizes the asynchronous process from receiving the request to sending the export file to the user. This diagram should include all software / infrastructure components that will be needed to make the process as stable and scalable as possible. 
+
+Because the team has other things to work on too, this task is timeboxed to **1 hour** and you should share the architecture diagram as a **PDF file**.
+
+> [!NOTE]
+> Feel free to use any tool out there to create your diagram. If you are not familiar with such a tool, you can use www.draw.io. 
+
+## Repository Intro
+In this repository you will find an plain express.js server the exposes API endpoints to consumers. For this exercise, the API endpoints are not protected.
 
 ### Installation
 
-Install all dependencies:
 ```sh
 npm install
 ```
 
-### Running the Project
+### Usage
 
-To start the server:
 ```sh
 npm run start
 ```
 
-For development with automatic reload:
-```sh
-npm run dev
-```
-
-### Running Tests
-
-To execute the test suite:
+### Run test
 ```sh
 npm run test
 ```
 
-### Project Structure
-- `src/` - Source code
-- `src/data/` - Mocked JSON data for memberships and periods
-- `src/modern/` - Modernized TypeScript codebase
-- `src/legacy/` - Legacy JavaScript codebase
+## 🗒️ Conditions
 
-### Useful Scripts
-- `npm run build` - Compile TypeScript
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Generate test coverage report
+- You will have multiple days for the challenge, but most of our candidates spend around **8h to 10h** on this assignment.
+- You should put your code in GitHub or GitLab/Bitbucket and send us the link to your repository where we can find the source code. That means no ZIP files.
+- Please make sure to include any additional instructions in a readme in case you change something about the compilation or execution of the codebase.
 
----
+## 💻 Technologies:
 
-## Architecture Diagram (Task 2)
+We believe that great developers are not bound to a specific technology set, but no matter their toolbox they are able to think critically about how to structure and design good code. For this exercise, we provided just a small and simple set of tools to run the a application and tests. Feel free to use any library out there to help you with your implementation.
 
-You can view the architecture diagram for the asynchronous membership export process here:
+### Pre-installed
 
-[Membership Export Architecture Diagram](https://viewer.diagrams.net/index.html?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Untitled%20Diagram.drawio&dark=auto#R%3Cmxfile%3E%3Cdiagram%20name%3D%22Page-1%22%20id%3D%22e01rEyMjg1d6C2L8W_ZL%22%3E7ZxZc%2BI4EIB%2FTR6hfGJ4HEjmqqQmCbOz2X3ZElixNWMsrywCzK9fyZYwlkwwBAzZciqVWG35oPWp1YeSK3s0W34iIAnvsA%2BjK8vwl1f29ZVlWZ7psF9cshISwzNySUCQn8vMQjBGv6EQym5z5MO01JFiHFGUlIVTHMdwSksyQAhelLs946j81AQEUBOMpyDSpX8in4a5tO8ahfwzREEon2wa4swMyM5CkIbAx4sNkX1zZY8IxjQ%2Fmi1HMOLak3rJr%2Fu45ez6xQiMaZ0LiPP0cfTjfvL9AVP85Wmc%2FOonHXGXFxDNxQcejX%2Fw8cKLOMLAF69OV1If6QLNIhCz1vAZx3QszhisPQ1R5N%2BCFZ7z90kpmP6SrWGICfrN%2BoOInTKZgJ0mVAy3bZR6jPmV4p4EpqzPvfyQpiK6A8tSx1uQUvk2OIpAkqJJ9n78whkgAYqHmFI8E50WIaJwnIAp77NgCPMXoTP5krqKpb4goXC5IRIq%2FwTxDFKyYl3E2Y4px1%2FMgI4r0V4UPJmOkIWbLPWFEAiGg%2FXd1w98ZMyDOGCfcf1Eu%2Fw8q%2BJpVsXTbOVhIKKQxIDCIZ7HfrqJFjvY%2BKiFKANuD%2Fg8DT6kA8f0TDNeCP4FRzjChMljnBOIokgRgQgFMWtG8JlfxgcKsdn8QYhnyPf5nYcpG3QUB7dZt2unkDwKlXARZpc%2FR9mkDdmFkN1hmGAU00xH7pB9M62NjK575bJ3HbG2WbTZN%2B9O6AjH7PUByiCCDNEF5JgOCaaAgsl6Au1N46tTejeiq%2FLI7%2BJRJWQTxxIa%2B3JgaRzMU0i%2BtCw0z0Lv3CzYGgs%2Bs0EfCTPZLQ1N0zA4Nw1OJQ3fcctC4yyYVY5EozD0dHchnkZzn%2Fs%2BCSQICy%2Bl5aJRLtxzczHQuHiEPmIs9CKupwlhRwE%2F%2BjADLMJgXW8ipkY0AtMQ6gFOCBJ%2BOF1FKPYhsXerdsI9ZOjfTtYCFsAEhEu%2FzSm7jYxA0jzeMd3jxBZWXwktKsfC3De0eNNgmLozd7PkGDPZVzxhPx%2FmkJ2xemDG1RhP0mStjTbOPGKcaTk1J%2BbgZCzoy%2FcfCV%2FAs6EGdN7a67fba6s2KZcS7pm6j38%2FT0Mm%2BZkZCMrcO%2BMRTCaI3j20hDRPyNmDQFN39TQOYOx%2F4PldvlSz5TxF07J2SL4oC1UyFZHVE290DdORgr8ygWWtBdfLzf7Xq83WPXMx2ceDRAqXiD6Jh%2FHj%2FGauaBV34g15o62GPsVzMoU1bClbzgL42nALbwj6pby2PtYbg%2BtWjK2UERgBil7K2fBXEpL3fDoUy5LpuaVVSUUm%2F9zios3ktXIf9kLK6qbcKNeLdqNjpSpNPVd5PCLdEo87WHwDQjUJkgbjQhCyBt3BxpfrKCS4xoFMdWynO%2BgZxZfdU9xpr9c17EY5s%2Fs6VmwYpPvLFo8QBzgG0U0hVcAq%2BtxinAj2fkJKV8INBnO2wpbIrDZl3uu27AwA92sSLO%2B4k%2BDaaL5tOetrxuPfPAgypukL%2BxnAGBJAMdknLGogpnB6SkxR4RlYRsXU7x3BM%2FA%2Ff%2FtnBZD38DcJ06%2FLb9bLl2lFqWAd1Le%2B4hF8xX5tRmR50a1HxOkKBoPWYm4fz0Fdi2lflsXUc3rSYs4A4penkCfnLsw%2Bmme3j3po3drHY9rHQW1Gtm%2B%2FaNY%2BrrFWt%2FhsOB1nnUSmsmGlU5W39CpUZp5OZ7r5%2BZRri1sgEPuZvjDhrUyZ7bx627zaA5vtfkclJKfzO%2FR51WYxL4mQqixms4TowUpb%2Fjg7FusNumfjwtKdtLsLcmrV9XhdZd65Hqs52ePNJF1j7Uw69kyya5MiwPBqcuGeCgvpKFa4aWnhp8Fs97IB88CxxaRpTKrqzVWYOCezt8evJh5Q%2BiuSP6XUT5EJ2qf2uNXO78wISafkndURvfKaZKp7VurWfEyv3zXsjXKSUvKx%2Bl3PLc56Paf8nBOXfyy9UnBBqPZtu2FY7XcJq9WzSlTZA%2BswWm0lv2ir2J%2B6Gunq9DWXWzcOQrZrNZRblwmA3fX0unQ2k1uXVe7LH9TDx8asazhkwetCxsbRk0pnsP%2BH610mTnfq3XEuy2Ir7oV3oHvRUf%2F60lE3Wp%2FYYjv6lts828%2FT1fxPnbdvih%2FbGmrveC%2B8WRV2VG6FV8f6eJPZ1cZiDLOYVMSiBljoiYvzVjDtiqC%2B2QqmDnBB6M1YU1cbwO8ZwK%2BpfD8lTOfdeCzN7%2FCQWZPdK657Lk%2BncprrtvFYjk7XMN3SkFle%2F%2FVBYw1tc%2FdlZGvqj%2B5l%2BVOOq7hBammgrkPlqMu6utn3eP5UJaam7pAnOKUByTLMMzibwDREyf%2FJc%2Bo4VQWfnqvDYh3jrwir1W6dzDycLQ56la8LmbfqfjbzwGm7vlCpxb951rJm8R%2BT8u7FP56yb%2F4D%3C%2Fdiagram%3E%3C%2Fmxfile%3E#%7B%22pageId%22%3A%22e01rEyMjg1d6C2L8W_ZL%22%7D)
+- Express - https://expressjs.com/
+- TypeScript - https://www.typescriptlang.org/
+- Jest - https://jestjs.io/
+
+Best of luck and looking forward to what you are able to accomplish! 🙂
